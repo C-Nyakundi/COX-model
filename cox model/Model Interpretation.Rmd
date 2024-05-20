@@ -1,0 +1,101 @@
+## Model Interpretation  
+The following code performs a Cox proportional hazards regression analysis using the `coxph` function from the `survival` package in R. Here's a breakdown of what the code does:
+
+**cox <- coxph(Surv(fu_time, death) ~ ethnicgroup, data = g)**
+
+### Explanation
+
+1. **`Surv(fu_time, death)`**:
+   - This creates a survival object, which combines the follow-up time (`fu_time`) and the event indicator (`death`). The `Surv` function specifies the time-to-event data where `fu_time` is the time variable and `death` is the event indicator (usually `1` for an event like death, and `0` for censored data).
+
+2. **`~ ethnicgroup`**:
+   - This specifies that the model will use `ethnicgroup` as the predictor variable. The model will examine how different ethnic groups affect the hazard of the event occurring (in this case, death).
+
+3. **`data = g`**:
+   - This indicates that the variables `fu_time`, `death`, and `ethnicgroup` should be taken from the dataframe `g`.
+
+### What the Code Does
+- The `coxph` function fits a Cox proportional hazards regression model. This model is used to explore the relationship between the survival time of subjects and one or more predictor variables (in this case, `ethnicgroup`).
+- The result of this fitting process is assigned to the object `cox`.
+
+### What the Resulting Object (`cox`) Contains
+- **Coefficients**: Estimates of the effect of each level of `ethnicgroup` on the hazard of the event occurring.
+- **Hazard Ratios**: Derived from the coefficients, these indicate the relative risk of the event occurring for different levels of `ethnicgroup`.
+- **p-values**: Indicate the statistical significance of the coefficients.
+- **Confidence Intervals**: Provide a range of values within which the true hazard ratio is likely to fall.
+- **Overall Model Fit**: Includes metrics like the log-likelihood, AIC (Akaike Information Criterion), and others to assess the model's goodness of fit.
+
+### Interpretation
+The Cox proportional hazards model will allow you to determine if and how the `ethnicgroup` variable influences the time until death, adjusting for the follow-up time. Significant results (p-values less than 0.05) for the `ethnicgroup` variable would suggest that there is a statistically significant difference in survival times between different ethnic groups.
+
+
+**-------------------------------------------------Model 1----------------------------------------------------------**
+
+Call:
+coxph(formula = Surv(fu_time, death) ~ ethnicgroup, data = g)
+
+  n= 957, number of events= 471 
+   (43 observations deleted due to missingness)
+
+                coef exp(coef) se(coef)      z Pr(>|z|)
+ethnicgroup -0.04555   0.95547  0.05069 -0.899    0.369
+
+            exp(coef) exp(-coef) lower .95 upper .95
+ethnicgroup    0.9555      1.047    0.8651     1.055
+
+Concordance= 0.514  (se = 0.006 )
+Likelihood ratio test= 0.89  on 1 df,   p=0.3
+Wald test            = 0.81  on 1 df,   p=0.4
+Score (logrank) test = 0.81  on 1 df,   p=0.4
+
+
+**------------------------------Interpretation--------------------------------**
+The Cox proportional hazards regression model output can be interpreted as follows:
+
+1. **Effect of Ethnic Group**: The coefficient for `ethnicgroup` is -0.04555, with an exp(coef) (hazard ratio) of 0.95547. This indicates that being in a different ethnic group slightly decreases the hazard of the event (death), but this effect is not statistically significant (p=0.369).
+
+2. **Confidence Interval**: The 95% confidence interval for the hazard ratio (exp(coef)) ranges from 0.8651 to 1.055, which includes 1, suggesting no significant effect of `ethnicgroup` on survival.
+
+3. **Model Fit Statistics**: The concordance index is 0.514, indicating that the model's predictive accuracy is slightly better than random guessing. The likelihood ratio test, Wald test, and score (logrank) test all have p-values greater than 0.05, indicating that `ethnicgroup` is not a significant predictor of survival in this model.
+
+
+
+**-------------------------------------------------Model 2 (Ethnic segmented into categorical var------------------------------------**
+
+
+coxph(formula = Surv(fu_time, death) ~ ethnic_group)
+
+  n= 957, number of events= 471 
+   (43 observations deleted due to missingness)
+
+                  coef exp(coef) se(coef)      z Pr(>|z|)   
+ethnic_group2 -0.06428   0.93774  0.32000 -0.201  0.84078   
+ethnic_group3 -1.19586   0.30244  0.41108 -2.909  0.00362 **
+ethnic_group9  0.07394   1.07674  0.35706  0.207  0.83596   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+              exp(coef) exp(-coef) lower .95 upper .95
+ethnic_group2    0.9377     1.0664    0.5008    1.7558
+ethnic_group3    0.3024     3.3064    0.1351    0.6769
+ethnic_group9    1.0767     0.9287    0.5348    2.1679
+
+Concordance= 0.516  (se = 0.006 )
+Likelihood ratio test= 12.99  on 3 df,   p=0.005
+Wald test            = 8.55  on 3 df,   p=0.04
+Score (logrank) test = 9.61  on 3 df,   p=0.02
+
+**------------------------------Interpretation--------------------------------**
+
+The Cox proportional hazards regression model output can be interpreted as follows:
+
+1. **Effect of Ethnic Groups**:
+   - **ethnic_group2**: The coefficient is -0.06428 with a hazard ratio (exp(coef)) of 0.93774. This suggests a slight decrease in the hazard of death for ethnic_group2 compared to the reference group, but this effect is not statistically significant (p=0.84078).
+   - **ethnic_group3**: The coefficient is -1.19586 with a hazard ratio (exp(coef)) of 0.30244. This indicates a significant decrease in the hazard of death for ethnic_group3 compared to the reference group, and this effect is statistically significant (p=0.00362). The 95% confidence interval for the hazard ratio is 0.1351 to 0.6769, which does not include 1, further supporting the significant effect.
+   - **ethnic_group9**: The coefficient is 0.07394 with a hazard ratio (exp(coef)) of 1.07674. This suggests a slight increase in the hazard of death for ethnic_group9 compared to the reference group, but this effect is not statistically significant (p=0.83596).
+
+2. **Model Fit Statistics**:
+   - **Concordance**: The concordance index is 0.516, indicating the model's predictive accuracy is slightly better than random guessing.
+   - **Likelihood Ratio Test**: The test has a value of 12.99 on 3 degrees of freedom with a p-value of 0.005, indicating that at least one of the coefficients in the model is significantly different from zero.
+   - **Wald Test**: The test has a value of 8.55 on 3 degrees of freedom with a p-value of 0.04, supporting the significance of at least one predictor.
+   - **Score (Logrank) Test**: The test has a value of 9.61 on 3 degrees of freedom with a p-value of 0.02, indicating that the predictors collectively are significant in the model.
