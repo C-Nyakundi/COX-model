@@ -99,3 +99,19 @@ The Cox proportional hazards regression model output can be interpreted as follo
    - **Likelihood Ratio Test**: The test has a value of 12.99 on 3 degrees of freedom with a p-value of 0.005, indicating that at least one of the coefficients in the model is significantly different from zero.
    - **Wald Test**: The test has a value of 8.55 on 3 degrees of freedom with a p-value of 0.04, supporting the significance of at least one predictor.
    - **Score (Logrank) Test**: The test has a value of 9.61 on 3 degrees of freedom with a p-value of 0.02, indicating that the predictors collectively are significant in the model.
+
+
+**-------------------------------------------Descriptive Statistics---------------------------------------------------------**
+
+	Shapiro-Wilk normality test
+
+data:  g$age
+W = 0.9481, p-value < 2.2e-16
+
+W Value: The test statistic  𝑊 = 0.9481. This value is used to measure the normality of the data. Values close to 1 indicate normality, while values further from 1 suggest non-normality.
+
+p-Value: The p-value is less than 
+
+Conclusion: Since the p-value is significantly less than the common significance level of 0.05, we reject the null hypothesis that the data comes from a normal distribution.
+
+Therefore, the data for the variable age in the dataset g does not follow a normal distribution.

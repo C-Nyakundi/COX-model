@@ -1,6 +1,7 @@
 
 
 ## Installing the required packages 
+pacman::p_load(ggplot2, tidyverse, forcats, dplyr, readxl, knitr, ggpubr, nortest, patchwork)
 library(survival)
 library(survminer) # plotting functions for survival analysis
 
@@ -29,3 +30,17 @@ fu_time <- g[, "fu_time"]
 ### Re-running the model 
 cox <- coxph(Surv(fu_time, death) ~ ethnic_group)
 summary(cox)
+
+
+# Running descriptive analyses for these variables:(Age, Gender, Prior OPD appointments missed (“prior_dnas”), Ethnic group, COPD (chronic obstructive pulmonary disease))
+
+## Age
+hist(g$age)
+summary(g$age)
+shapiro.test(g$age)
+
+## Gender 
+kable(table(g$gender, useNA = "always"))
+prop.table(g$gender)
+gender<- as.factor(g[, "gender"])
+prop.table(gender)
